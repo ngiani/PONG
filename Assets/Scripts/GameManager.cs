@@ -1,7 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
+using static GoalCollider;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,21 +14,83 @@ public class GameManager : MonoBehaviour
         get
         {
             if (_instance == null)
-                _instance = new GameManager();
+                _instance = FindObjectOfType<GameManager>();
 
             return _instance;
         }
     }
 
-    [SerializeField] Ball ball;
-
     private int _round;
+
+
+    public int Round => _round;
+
+    private int leftScore = 0;
+    private int rightScore = 0;
+
+    GoalCollider leftGoalCollider;
+    GoalCollider rightGoalCollider;
+
+
+    public class ScoreEvent : UnityEvent<SIDE, int>
+    {
+
+    }
+
+    public ScoreEvent ScoreAssigned = new ScoreEvent();
+
 
     // Start is called before the first frame update
     void Start()
     {
-        //Launch the ball first time when game starts
-        LaunchBall();
+        DontDestroyOnLoad(this);
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnScoredGoal(GoalCollider.SIDE side)
+    {
+        if (side == GoalCollider.SIDE.LEFT)
+        {
+            leftScore++;
+
+            ScoreAssigned?.Invoke(side, leftScore);
+        }
+
+        else if (side == GoalCollider.SIDE.RIGHT)
+        {
+            rightScore++;
+
+            ScoreAssigned?.Invoke(side, rightScore);
+        }
+
+        StartCoroutine(WaitAndStartNewRound());
+    }
+
+    //Start new round and reset the ball on starting position, then launch it
+    IEnumerator WaitAndStartNewRound()
+    {
+        yield return new WaitForSeconds(2.0f);
+
+        _round++;
+
+        Ball.Instance.transform.position = Vector2.zero;
+        Ball.Instance.Launch();
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "main")
+        {
+            //Launch the ball first time when game starts
+            Ball.Instance.Launch();
+
+            leftGoalCollider = GameObject.Find("leftGoalCollider").GetComponent<GoalCollider>();
+            rightGoalCollider = GameObject.Find("rightGoalCollider").GetComponent<GoalCollider>();
+
+            leftGoalCollider.ScoredGoal.AddListener(OnScoredGoal);
+            rightGoalCollider.ScoredGoal.AddListener(OnScoredGoal);
+        }
     }
 
     // Update is called once per frame
@@ -34,26 +99,23 @@ public class GameManager : MonoBehaviour
         
     }
 
-    private void LaunchBall()
+    public GameObject GetFloor()
     {
-        Vector2 _launchDirection;
-
-        //Launch ball on the left on even rounds
-        if (_round % 2 == 0)
-        {
-            _launchDirection = new Vector2(-Random.Range(0.4f, 1.0f), Random.Range(0.0f, 1.0f));
-
-          
-        }
-
-        //Launch ball on the right on odd rounds
-        else
-        {
-
-            _launchDirection = new Vector2(Random.Range(0.4f, 1.0f), Random.Range(0.0f, 1.0f));
-        }
-
-        ball.GetComponent<Rigidbody2D>().AddForce(_launchDirection.normalized * ball.Speed, ForceMode2D.Impulse);
+        return GameObject.Find("floor");
     }
 
+    public GameObject GetRoof()
+    {
+        return GameObject.Find("roof"); ;
+    }
+
+    public void LoadMainLevel()
+    {
+        SceneManager.LoadScene("main");
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
 }

@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 6558372862656968770}
   - component: {fileID: 6558372862656968773}
-  - component: {fileID: 6558372862656968768}
   - component: {fileID: 6599536741008887958}
   - component: {fileID: -409473558657970572}
-  m_Layer: 0
+  - component: {fileID: 6558372862656968768}
+  m_Layer: 7
   m_Name: racket
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,20 +86,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &6558372862656968768
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6558372862656968772}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07f26faf6f91ba645b7defe39f0f3aac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _player: 0
-  _speed: 6
 --- !u!61 &6599536741008887958
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -125,7 +111,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0.1
+  m_EdgeRadius: 0.24
 --- !u!50 &-409473558657970572
 Rigidbody2D:
   serializedVersion: 4
@@ -147,3 +133,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &6558372862656968768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6558372862656968772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07f26faf6f91ba645b7defe39f0f3aac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _player: 0
+  _speed: 8
+  _scoreCollider: {fileID: 0}
