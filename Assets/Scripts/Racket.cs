@@ -7,13 +7,16 @@ public class Racket : MonoBehaviour
     [SerializeField] bool _player;
     [SerializeField] float _speed;
 
+    public bool IsPlayer => _player;
+
     private Racket enemyRacket;
+
 
     private GameObject floor;
     private GameObject roof;
 
     private BoxCollider2D floorCollider;
-    private BoxCollider2D racketCollider;
+    private CapsuleCollider2D racketCollider;
     private BoxCollider2D roofCollider;
 
     Vector2 _predictedCollisionPoint;
@@ -32,7 +35,7 @@ public class Racket : MonoBehaviour
         enemyRacket = new List<Racket>(FindObjectsOfType<Racket>()).Find(r => !r.Equals(this));
 
         floorCollider = floor.GetComponent<BoxCollider2D>();
-        racketCollider = GetComponent<BoxCollider2D>();
+        racketCollider = GetComponent<CapsuleCollider2D>();
         roofCollider = roof.GetComponent<BoxCollider2D>();
     }
 
@@ -89,9 +92,9 @@ public class Racket : MonoBehaviour
 
             else
             {
-                Ball.Instance.GetCollisionPointWith(new string[] { "Racket", "ScoreCollider", "Surface" }, out _predictedCollisionPoint);
+                Ball.Instance.GetCollisionPointWith(new string[] {"ScoreCollider", "Surface" }, out _predictedCollisionPoint);
 
-                AIReactionTime = Random.Range(0.5f, 1.25f);
+                AIReactionTime = Random.Range(0.1f, 0.4f);
 
                 isAIWaitingToGetNextPoint = true;
             }
@@ -102,7 +105,7 @@ public class Racket : MonoBehaviour
         //If it's not going to collide, move back towards center
         else
         {
-            MoveTowardsCenter(speed, offset);
+            //MoveTowardsCenter(speed, offset);
 
             elapsedAIWaitingTime = 0.0f;
             isAIWaitingToGetNextPoint = false;
@@ -142,7 +145,7 @@ public class Racket : MonoBehaviour
 
     bool BallIsNear()
     {
-        return Vector3.Distance(Ball.Instance.transform.position, transform.position) <= (Vector3.Distance(transform.position, enemyRacket.transform.position) / 2) + Random.Range(-5, 5);
+        return Vector3.Distance(Ball.Instance.transform.position, transform.position) <= (Vector3.Distance(transform.position, enemyRacket.transform.position) / 2) + Random.Range(-2.5f, 2.5f);
     }
 
     #endregion

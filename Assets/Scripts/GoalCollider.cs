@@ -30,11 +30,9 @@ public class GoalCollider : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("SOMETHING ENTERED");
-
         if (other.tag == "ball")
         {
-            Debug.Log("BALL ENTERED");
+            GetComponent<AudioSource>().Play();
 
             ScoredGoal?.Invoke(_side);
         }
