@@ -70,8 +70,6 @@ public class Ball : MonoBehaviour
             _launchDirection = new Vector2(Random.Range(0.3f, 0.7f), Random.Range(0.3f, 0.7f));
         }
 
-        Debug.LogFormat("LAUNCH DIRECTION {0}", _launchDirection);
-
         _rigidBody.AddForce(_launchDirection.normalized * _speed, ForceMode2D.Impulse);
     }
 
@@ -99,22 +97,37 @@ public class Ball : MonoBehaviour
 
 
         //Reflect ball on collision adding a random vector, to avoid ball bouncing forever along the same direction
-        Vector2 randomVector;
-        do
-        {
-            randomVector = new Vector2(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f));
-        }
-        while (randomVector.x <= -0.1f && randomVector.x >= 0.1f && randomVector.y <= -0.1f && randomVector.y >= 0.5f);
+        float randAmount = 0.5f;
+        Vector2 randomVector = new Vector2(Random.Range(-randAmount, randAmount), Random.Range(-randAmount, randAmount));
 
-        
-        Vector2 inDirection = _velocityBeforeCollision + randomVector;
+        Vector2 inDirection = _velocityBeforeCollision;
         Vector2 inNormal = collision.contacts[0].normal;
 
-        _rigidBody.velocity = Vector2.Reflect(inDirection, inNormal);
+        Vector2 outDirection = Vector2.Reflect(inDirection, inNormal) + randomVector;
 
-        Debug.LogFormat("REFLECTED VELOCITY {0}", _rigidBody.velocity);
-
+        //Avoid reflected velocity with zero components : reflection angle should always be large enough
+        _rigidBody.velocity = RemoveCloseToZeroComponents(outDirection);
     }
 
 
+    Vector2 RemoveCloseToZeroComponents(Vector2 vector)
+    {
+        Vector2 outVector = vector;
+
+        float threshold = 4;
+
+        if (vector.x >= -threshold && vector.x <= 0)
+            outVector.x = -threshold;
+
+        else if (vector.x <= threshold && vector.x >= 0)
+            outVector.x = threshold;
+
+        if (vector.y >= -threshold && vector.y <= 0)
+            outVector.y = -threshold;
+
+        else if (vector.y <= threshold && vector.y >= 0)
+            outVector.y = threshold;
+
+        return outVector;
+    }
 }

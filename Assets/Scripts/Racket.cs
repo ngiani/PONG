@@ -94,7 +94,7 @@ public class Racket : MonoBehaviour
             {
                 Ball.Instance.GetCollisionPointWith(new string[] {"ScoreCollider", "Surface" }, out _predictedCollisionPoint);
 
-                AIReactionTime = Random.Range(0.1f, 0.4f);
+                AIReactionTime = Random.Range(0.1f, 0.3f);
 
                 isAIWaitingToGetNextPoint = true;
             }

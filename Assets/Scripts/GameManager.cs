@@ -151,9 +151,7 @@ public class GameManager : MonoBehaviour
             _rightScore = 0;
             _round = 0;
 
-            //Launch the ball first time when game starts
-            Ball.Instance.Launch();
-
+            //Init rackets and goal colliders
             leftRacket = GameObject.Find("leftRacket").GetComponent<Racket>();
             rightRacket = GameObject.Find("rightRacket").GetComponent<Racket>();
 
@@ -165,7 +163,18 @@ public class GameManager : MonoBehaviour
 
             leftGoalCollider.ScoredGoal.AddListener(OnScoredGoal);
             rightGoalCollider.ScoredGoal.AddListener(OnScoredGoal);
+
+            //Wait a couple of seconds, then launch the ball
+            StartCoroutine(WaitBeforeFirstLaunch());
+
         }
+    }
+
+    IEnumerator WaitBeforeFirstLaunch()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        Ball.Instance.Launch();
     }
 
     // Update is called once per frame
