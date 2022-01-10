@@ -53,11 +53,6 @@ public class Racket : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
-    {
-
-    }
-
     void MoveWithUserInput()
     {
         if (Input.GetKey(KeyCode.UpArrow) && !IsCollidingWithRoof())
